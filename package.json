@@ -9,7 +9,11 @@
   "engines": {
     "node": "15.10.0"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brnhensley/standup-bot"
+  },
+  "author": "Brian Hensley",
   "license": "ISC",
   "description": "",
   "dependencies": {
