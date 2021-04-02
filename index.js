@@ -56,9 +56,13 @@ const timeRemaining = (date, time) => {
     const dateString = date.toUTCString().slice(0, date.toUTCString().length - 13);
     const nextStandup = new Date(`${dateString} ${time}`);
     const timeLeft = nextStandup - Date.now();
-    const hoursLeft = Math.floor((timeLeft / (1000 * 60 * 60)));
+    let hoursLeft = Math.floor((timeLeft / (1000 * 60 * 60)));
+    let minutesLeft = Math.ceil((timeLeft / 1000) / 60 % 60);
+    if (minutesLeft === 60) {
+        minutesLeft = 0;
+        hoursLeft++;
+    }
     const hs = (hoursLeft !== 1) ? "s" : "";
-    const minutesLeft = Math.ceil((timeLeft / 1000) / 60 % 60);
     const ms = (minutesLeft !== 1) ? "s" : "";
     return `${hoursLeft} hour${hs} ${minutesLeft} minute${ms}`;
 };
