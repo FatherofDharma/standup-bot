@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 require('dotenv').config();
-const keepRunning = require('./keepRunning');
-keepRunning();
 
 client.login(process.env.TOKEN);
 let robert = null;
@@ -24,32 +22,28 @@ const alarmClock = () => {
 
     // alert students
     if ((time === 1658 || time === 2028) && day !== 0 && day !== 6) {
-        console.log("standup triggered");
         general.send(`:parrot: Squawk @here! Get ready for standup!`);
         robert.send('Robert, get ready for standup!');
     }
 
     // set countdown status
     let timeString = null;
-    if (time < 1700 && day !== 6 && day !== 0) {
+    if (day === 6 || day === 0 || (time >= 2030 && day === 5)) {
+        client.user.setActivity(`Next standup Mon @ 10`, { type: 'WATCHING' });
+    } else if (time < 1700) {
         timeString = timeRemaining(date, "17:00:00");
-    } else if (time >= 1700 && time <= 2030 && day != 6 && day !== 0) {
+    } else if (time >= 1700 && time <= 2030) {
         timeString = timeRemaining(date, "20:30:00");
-    } else if (time >= 2030 || day === 5 || day === 6) {
+    } else if (time >= 2030) {
         let tempDate = date;
-        let dayMod = 1;
-        // loop to add extra days to the countdown if it's Fri or Sat
-        while (dayMod + day === 6 || dayMod + day === 7) {
-            console.log(dayMod + day);
-            dayMod++;
-        }
-        tempDate.setDate(new Date(date.getUTCDate() + dayMod));
+        tempDate.setDate(new Date(date.getUTCDate() + 1));
         timeString = timeRemaining(tempDate, "17:00:00");
     };
 
     // custom statuses on bots are ignored by discord, 'Watching' activity is the best I can do for a status 
     if (timeString) client.user.setActivity(`${timeString} until next standup`, { type: 'WATCHING' });
     console.log(timeString);
+
     // this sets a trigger to call alarmClock whenever the cpu clock's seconds are 0, 
     // updating the bot's status when the clock changes minutes
     setTimeout(alarmClock, 60000 - (date.getTime() % 60000));
