@@ -33,7 +33,7 @@ const alarmClock = () => {
     if (time >= 2030 || day === 6 || day === 0) {
         let tempDate = date;
         let dayMod = 1;
-        while (day === 5 || day === 6) { dayMod++; }
+        while (dayMod + day === 6 || dayMod + day === 7) { dayMod++; }
 
         tempDate.setDate(new Date(date.getUTCDate() + dayMod));
         timeString = timeRemaining(tempDate, "17:00:00");
