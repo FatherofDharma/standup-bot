@@ -6,11 +6,13 @@ const alerts = require('./alerts');
 client.login(process.env.TOKEN);
 let robert = null;
 let general = null;
+let testChannel = null;    // remove after testing
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
     client.users.fetch(process.env.ROBERT_ID).then(user => { robert = user; });
     client.channels.fetch(process.env.GENERAL).then(channel => { general = channel; });
+    client.channels.fetch(process.env.TEST_CHAN).then(channel => { testChannel = channel; });    // remove after testing
     alarmClock();
 });
 
@@ -41,6 +43,10 @@ const alarmClock = () => {
         timeString = timeRemaining(date, "17:00:00");
     } else if (time >= 1700 && time < 2030) {
         timeString = timeRemaining(date, "20:30:00");
+    }
+
+    if (time < 1500 && (time % 100 === 0)) {    // remove after testing
+        testChannel.send(`time = ${time} : time remaining = ${timeString}`);
     }
 
     // custom statuses on bots are ignored by discord, 'Watching' activity is the best I can do for a status 
