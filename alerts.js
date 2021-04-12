@@ -9,5 +9,5 @@ module.exports = [
     `:bell: Ding ding @here! Get ready for standup!`,
     `:satellite: Incoming message.... "standup in a few minutes!"`,
     `:bellhop: Ding ding @here! Get ready for standup!`,
-    `:spacedonk: :spacedonk: :spacedonk: Standup in a few! :spacedonk: :spacedonk: :spacedonk: `
+    `:warning: :warning: :warning: Standup in a few! :warning: :warning: :warning: `
 ]
