@@ -25,9 +25,9 @@ const alarmClock = () => {
     if ((time === 1658 || time === 2028) && day !== 0 && day !== 6) {
         const alert = alerts[Math.floor(Math.random() * alerts.length)];
         general.send(`${alert} Be prepared to answer these three questions:
-            1. What are you working on now?
-            2. What will you work on next?
-            3. What (if anything) is blocking your progress?`);
+            1.    What did you do yesterday?
+            2.    What will you do today?
+            3.    What (if anything) is blocking your progress?`);
 
         robert.send('Robert, get ready for standup!');
     }
