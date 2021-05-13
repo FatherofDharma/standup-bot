@@ -23,6 +23,7 @@ const alarmClock = () => {
 
     // alert students
     if ((time === 1655 || time === 2025) && day !== 0 && day !== 6) {
+        robert.send('Robert, get ready for standup!');
         general.send(`Standup is in 5 minutes @here. Be prepared to answer these three questions:
         1.    What did you do yesterday?
         2.    What will you do today?
@@ -30,7 +31,7 @@ const alarmClock = () => {
     } else if ((time === 1700 || time === 2030) && day !== 0 && day !== 6) {
         const alert = alerts[Math.floor(Math.random() * alerts.length)];
         general.send(alert);
-        robert.send('Robert, get ready for standup!');
+        robert.send("Robert, it's time for standup!");
     }
 
     // set countdown status
