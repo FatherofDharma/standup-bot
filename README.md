@@ -17,7 +17,7 @@ This bot will post a message into a specefic discord channel, and send one DM, a
 
 ## _Known Bugs_
 
-* No known bugs
+* No known bugs at this time
 
 ## _Support and contact details_
 
