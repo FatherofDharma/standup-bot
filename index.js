@@ -12,37 +12,66 @@ client.once('ready', () => {
     alarmClock();
 });
 
+//found this solution for a dst function in a stack overflow conversation and have adapted it here
+const dst = (date) => {
+    let jan = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
+    let jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
+    return Math.max(jan, jul) != date.getTimezoneOffset();
+};
+
 const alarmClock = () => {
     const date = new Date();
     const day = date.getUTCDay();
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
     const time = parseInt(`${hours}${mins}`);
-
+    let localTargetTime;
+    const pdtTimes = {
+        amWarn: 1655,
+        amTime: 1700,
+        amTimeRemainStr: "17:00:00",
+        pmWarn: 2025,
+        pmTime: 2030,
+        pmTimeRemainStr: "20:30:00"
+    };
+    const pstTimes = {
+        amWarn: 1755,
+        amTime: 1800,
+        amTimeRemainStr: "18:00:00",
+        pmWarn: 2125,
+        pmTime: 2130,
+        pmTimeRemainStr: "21:30:00"
+    };
+    if (dst(date)) {
+        localTargetTime = pdtTimes;
+    } else {
+        localTargetTime = pstTimes;
+    }
     // alert students
-    if ((time === 1655 || time === 2025) && day !== 0 && day !== 6) {
+    if ((time === localTargetTime.amWarn || time === localTargetTime.pmWarn) && day !== 0 && day !== 6) {
         general.send(`Standup is in 5 minutes @here. Be prepared to answer these three questions:
         1.    What did you do yesterday?
         2.    What will you do today?
         3.    What (if anything) is blocking your progress?`);
-    } else if ((time === 1700 || time === 2030) && day !== 0 && day !== 6) {
+    } else if ((time === localTargetTime.amTime || time === localTargetTime.pmTime) && day !== 0 && day !== 6) {
         const alert = alerts[Math.floor(Math.random() * alerts.length)];
         general.send(alert);
     }
 
     // set countdown status
     let timeString = null;
-    if (time >= 2030 || day === 6 || day === 0) {
+    if (time >= localTargetTime.pmTime || day === 6 || day === 0) {
         let tempDate = date;
         let dayMod = 1;
         while (dayMod + day === 6 || dayMod + day === 7) { dayMod++; }
 
         tempDate.setDate(new Date(date.getUTCDate() + dayMod));
-        timeString = timeRemaining(tempDate, "17:00:00");
-    } else if (time < 1700) {
-        timeString = timeRemaining(date, "17:00:00");
-    } else if (time >= 1700 && time < 2030) {
-        timeString = timeRemaining(date, "20:30:00");
+        timeString = timeRemaining(tempDate, localTargetTime.amTimeRemainStr);
+    } else if (time < localTargetTime.amTime) {
+        timeString = timeRemaining(date, localTargetTime.amTimeRemainStr);
+    } else if (time >= localTargetTime.amTime && time < localTargetTime.pmTime) {
+        timeString = timeRemaining(date, localTargetTime.pmTimeRemainStr);
+        //fix strings============================================================================
     }
 
     // custom statuses on bots are ignored by discord, 'Watching' activity is the best I can do for a status 
