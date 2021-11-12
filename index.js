@@ -31,7 +31,8 @@ const alarmClock = () => {
     let localTargetTime = (dst(date)) ? alertTimes.pdt : alertTimes.pst;
 
     // determines which role to call out based on time of day
-    let role = roleCheck(time, localTargetTime);
+    // let role = roleCheck(time, localTargetTime);
+    let role = '@here';
 
     // alert students
 
