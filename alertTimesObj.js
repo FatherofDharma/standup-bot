@@ -4,8 +4,8 @@ module.exports = {
     amTime: 1800,
     amTimeRemainStr: "18:00:00",
     pmWarn: 2125,
-    pmTime: 2335,
-    pmTimeRemainStr: "23:35:00"
+    pmTime: 2130,
+    pmTimeRemainStr: "21:30:00"
   },
   pdt: {
     amWarn: 1655,
