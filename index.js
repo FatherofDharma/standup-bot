@@ -2,6 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 require('dotenv').config();
 const alerts = require('./alerts');
+const alertTimes = require('./alertTimesObj');
 
 client.login(process.env.TOKEN);
 let general = null;
@@ -25,36 +26,22 @@ const alarmClock = () => {
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
     const time = parseInt(`${hours}${mins}`);
-    let localTargetTime;
-    const pdtTimes = {
-        amWarn: 1655,
-        amTime: 1700,
-        amTimeRemainStr: "17:00:00",
-        pmWarn: 2025,
-        pmTime: 2030,
-        pmTimeRemainStr: "20:30:00"
-    };
-    const pstTimes = {
-        amWarn: 1755,
-        amTime: 1800,
-        amTimeRemainStr: "18:00:00",
-        pmWarn: 2125,
-        pmTime: 2130,
-        pmTimeRemainStr: "21:30:00"
-    };
-    if (dst(date)) {
-        localTargetTime = pdtTimes;
-    } else {
-        localTargetTime = pstTimes;
-    }
+
+    // determine which time values to use based on Daylight Savings Time
+    let localTargetTime = (dst(date)) ? alertTimes.pdt : alertTimes.pst;
+
+    // determines which role to call out based on time of day
+    let role = roleCheck(time, localTargetTime);
+
     // alert students
+
     if ((time === localTargetTime.amWarn || time === localTargetTime.pmWarn) && day !== 0 && day !== 6) {
-        general.send(`Standup is in 5 minutes @here. Be prepared to answer these three questions:
+        general.send(`Standup is in 5 minutes, ${role}. Be prepared to answer these three questions:
         1.    What did you do yesterday?
         2.    What will you do today?
         3.    What (if anything) is blocking your progress?`);
     } else if ((time === localTargetTime.amTime || time === localTargetTime.pmTime) && day !== 0 && day !== 6) {
-        const alert = alerts[Math.floor(Math.random() * alerts.length)];
+        const alert = alerts.getRandomAlert(role);
         general.send(alert);
     }
 
@@ -71,7 +58,6 @@ const alarmClock = () => {
         timeString = timeRemaining(date, localTargetTime.amTimeRemainStr);
     } else if (time >= localTargetTime.amTime && time < localTargetTime.pmTime) {
         timeString = timeRemaining(date, localTargetTime.pmTimeRemainStr);
-        //fix strings============================================================================
     }
 
     // custom statuses on bots are ignored by discord, 'Watching' activity is the best I can do for a status 
@@ -83,6 +69,16 @@ const alarmClock = () => {
     setTimeout(alarmClock, 60000 - (date.getTime() % 60000));
 };
 
+// returns the appropriate role to be @mentioned based on time of day
+const roleCheck = (currentTime, timeObj) => {
+    if (currentTime <= timeObj.amTime) {
+        return '@morning';
+    } else if (currentTime >= timeObj.amTime && currentTime <= timeObj.pmTime) {
+        return '@afternoon';
+    } else {
+        return '@here';
+    }
+};
 // create a string of hours & mins remaining until next standup
 const timeRemaining = (date, time) => {
     const dateString = date.toUTCString().slice(0, date.toUTCString().length - 13);
