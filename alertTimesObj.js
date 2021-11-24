@@ -12,7 +12,7 @@ module.exports = {
     amTime: 1700,
     amTimeRemainStr: "17:00:00",
     pmWarn: 2025,
-    pmTime: 2340,
+    pmTime: 0010,
     pmTimeRemainStr: "20:30:00"
   }
 };
