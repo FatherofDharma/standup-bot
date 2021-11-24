@@ -69,11 +69,12 @@ const alarmClock = () => {
     setTimeout(alarmClock, 60000 - (date.getTime() % 60000));
 };
 
-const morningRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "morning");
-const afternoonRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "afternoon");
 
 // returns the appropriate role to be @mentioned based on time of day
 const roleCheck = (currentTime, timeObj) => {
+    let morningRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "morning");
+    let afternoonRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "afternoon");
+    console.log(morningRole.id);
     if (currentTime <= timeObj.amTime) {
         return `<@&${morningRole.id}>`;
     } else if (currentTime >= timeObj.amTime && currentTime <= timeObj.pmTime) {
