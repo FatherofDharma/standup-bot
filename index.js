@@ -26,7 +26,7 @@ const alarmClock = () => {
     const date = new Date(startDate.toLocaleString("en-US", {
         timeZone: "America/Los_Angeles"
     }));
-    console.log(date);
+    console.log("Change time to PST Date Object: ", changeTimezone(startDate, "America/Los_Angeles"));
     const day = date.getUTCDay();
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
@@ -106,3 +106,27 @@ const timeRemaining = (date, time) => {
     const ms = (minutesLeft !== 1) ? "s" : "";
     return `${hoursLeft} hour${hs} ${minutesLeft} minute${ms}`;
 };
+
+//solution found on stack overflow for timezone adjustment from hosting computer time zone. https://stackoverflow.com/questions/15141762/how-to-initialize-a-javascript-date-to-a-particular-time-zone
+
+function changeTimezone(date, ianatz) {
+
+    // suppose the date is 12:00 UTC
+    var invdate = new Date(date.toLocaleString('en-US', {
+        timeZone: ianatz
+    }));
+
+    // then invdate will be 07:00 in Target Zone ()
+    // and the diff is 5 hours
+    var diff = date.getTime() - invdate.getTime();
+
+    // so 12:00 in Target is 17:00 UTC
+    return new Date(date.getTime() - diff); // needs to substract
+
+}
+
+// E.g.
+// var here = new Date();
+// var there = changeTimezone(here, "America/Toronto");
+
+// console.log(`Here: ${here.toString()}\nToronto: ${there.toString()}`);
