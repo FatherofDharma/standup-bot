@@ -23,9 +23,7 @@ const dst = (date) => {
 
 const alarmClock = () => {
     const startDate = new Date();
-    const date = new Date(startDate.toLocaleString("en-US", {
-        timeZone: "America/Los_Angeles"
-    }));
+    const date = changeTimezone(startDate, "America/Los_Angeles");
     console.log("Change time to PST Date Object: ", changeTimezone(startDate, "America/Los_Angeles"));
     const day = date.getUTCDay();
     const hours = date.getUTCHours();
