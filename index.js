@@ -22,7 +22,11 @@ const dst = (date) => {
 };
 
 const alarmClock = () => {
-    const date = new Date();
+    const startDate = new Date();
+    const date = new Date(startDate.toLocaleString("en-US", {
+        timeZone: "America/Los_Angeles"
+    }));
+    console.log(date);
     const day = date.getUTCDay();
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
