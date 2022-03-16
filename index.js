@@ -14,6 +14,7 @@ client.once('ready', () => {
 });
 
 //found this solution for a dst function in a stack overflow conversation and have adapted it here
+//Daylight Savings Time check returns true if Pacific Time Zone is in DST.
 const dst = (date) => {
     let jan = new Date(date.getFullYear(), 0, 1).getTimezoneOffset();
     let jul = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
@@ -26,15 +27,16 @@ const alarmClock = () => {
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
     const time = parseInt(`${hours}${mins}`);
-
+    console.log('31: day: ', day);
     // determine which time values to use based on Daylight Savings Time
     let localTargetTime = (dst(date)) ? alertTimes.pdt : alertTimes.pst;
-
     // determines which role to call out based on time of day
+    console.log('33: dst check: ', dst(date));
     let role = roleCheck(time, localTargetTime);
-
+    console.log('34 date: ', date);
+    console.log('35: localTargetTime: ', localTargetTime);
     // alert students
-
+    console.log('36: time: ', time);
     if ((time === localTargetTime.amWarn || time === localTargetTime.pmWarn) && day !== 0 && day !== 6) {
         general.send(`Standup is in 5 minutes, ${role}. Be prepared to answer these three questions:
         1.    What did you do yesterday?
@@ -62,7 +64,8 @@ const alarmClock = () => {
 
     // custom statuses on bots are ignored by discord, 'Watching' activity is the best I can do for a status 
     if (timeString) client.user.setActivity(`${timeString} until next standup`, { type: 'WATCHING' });
-    console.log(timeString);
+    console.log('64: timeString: ', timeString);
+
 
     // this sets a trigger to call alarmClock whenever the cpu clock's seconds are 0, 
     // updating the bot's status when the clock changes minutes
@@ -74,7 +77,6 @@ const alarmClock = () => {
 const roleCheck = (currentTime, timeObj) => {
     let morningRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "morning");
     let afternoonRole = client.guilds.cache.get(`${process.env.GUILD_ID}`).roles.cache.find(role => role.name === "afternoon");
-    console.log(morningRole.id);
     if (currentTime <= timeObj.amTime) {
         return `<@&${morningRole.id}>`;
     } else if (currentTime >= timeObj.amTime && currentTime <= timeObj.pmTime) {
@@ -88,6 +90,8 @@ const timeRemaining = (date, time) => {
     const dateString = date.toUTCString().slice(0, date.toUTCString().length - 13);
     const nextStandup = new Date(`${dateString} ${time} UTC`);
     const timeLeft = nextStandup - Date.now();
+    console.log('93: nextStandup: ', nextStandup);
+    console.log('94: timeLeft: ', timeLeft);
     let hoursLeft = Math.floor((timeLeft / (1000 * 60 * 60)));
     let minutesLeft = Math.ceil((timeLeft / 1000) / 60 % 60);
     if (minutesLeft === 60) {
