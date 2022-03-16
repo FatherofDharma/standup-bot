@@ -22,14 +22,13 @@ const dst = (date) => {
 };
 
 const alarmClock = () => {
-    const startDate = new Date();
-    const date = changeTimezone(startDate, "America/Los_Angeles");
-    console.log("Change time to PST Date Object: ", changeTimezone(startDate, "America/Los_Angeles"));
+    const date = new Date();
+    // const date = changeTimezone(startDate, "America/Los_Angeles");
+    // console.log("Change time to PST Date Object: ", changeTimezone(startDate, "America/Los_Angeles"));
     const day = date.getUTCDay();
     const hours = date.getUTCHours();
     const mins = date.getUTCMinutes() < 10 ? `0${date.getUTCMinutes()}` : `${date.getUTCMinutes()}`;
     const time = parseInt(`${hours}${mins}`);
-    console.log('31: day: ', day);
     // determine which time values to use based on Daylight Savings Time
     let localTargetTime = (dst(date)) ? alertTimes.pdt : alertTimes.pst;
     localTargetTime = alertTimes.pdt;
@@ -54,6 +53,7 @@ const alarmClock = () => {
     let timeString = null;
     if (time >= localTargetTime.pmTime || day === 6 || day === 0) {
         let tempDate = date;
+        console.log('tempDate: ', tempDate);
         let dayMod = 1;
         while (dayMod + day === 6 || dayMod + day === 7) { dayMod++; }
 
@@ -91,6 +91,7 @@ const roleCheck = (currentTime, timeObj) => {
 // create a string of hours & mins remaining until next standup
 const timeRemaining = (date, time) => {
     const dateString = date.toUTCString().slice(0, date.toUTCString().length - 13);
+    // const currentHostDate = changeTimezone(new Date(), "America/Los_Angeles");
     const nextStandup = new Date(`${dateString} ${time} UTC`);
     const timeLeft = nextStandup - Date.now();
     console.log('93: nextStandup: ', nextStandup);
@@ -108,21 +109,21 @@ const timeRemaining = (date, time) => {
 
 //solution found on stack overflow for timezone adjustment from hosting computer time zone. https://stackoverflow.com/questions/15141762/how-to-initialize-a-javascript-date-to-a-particular-time-zone
 
-function changeTimezone(date, ianatz) {
+// function changeTimezone(date, ianatz) {
 
-    // suppose the date is 12:00 UTC
-    var invdate = new Date(date.toLocaleString('en-US', {
-        timeZone: ianatz
-    }));
+//     // suppose the date is 12:00 UTC
+//     var invdate = new Date(date.toLocaleString('en-US', {
+//         timeZone: ianatz
+//     }));
 
-    // then invdate will be 07:00 in Target Zone ()
-    // and the diff is 5 hours
-    var diff = date.getTime() - invdate.getTime();
+//     // then invdate will be 07:00 in Target Zone ()
+//     // and the diff is 5 hours
+//     var diff = date.getTime() - invdate.getTime();
 
-    // so 12:00 in Target is 17:00 UTC
-    return new Date(date.getTime() - diff); // needs to substract
+//     // so 12:00 in Target is 17:00 UTC
+//     return new Date(date.getTime() - diff); // needs to substract
 
-}
+// }
 
 // E.g.
 // var here = new Date();
