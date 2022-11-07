@@ -31,7 +31,7 @@ const alarmClock = () => {
     const time = parseInt(`${hours}${mins}`);
     // determine which time values to use based on Daylight Savings Time
     let localTargetTime = (dst(date)) ? alertTimes.pdt : alertTimes.pst;
-    localTargetTime = alertTimes.pdt;
+    localTargetTime = alertTimes.pst;
     // determines which role to call out based on time of day
     console.log('33: dst check: ', dst(date));
     let role = roleCheck(time, localTargetTime);
